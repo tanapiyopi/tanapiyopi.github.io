@@ -1,5 +1,271 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TanaPiyopiのiOSアプリ開発</title>
+    <!-- Bootstrap CSSを読み込む -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesomeのアイコンを読み込む -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Murecho:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* カスタムCSS変数 */
+        :root {
+            --primary-color: #FFCC99; /* パステルオレンジ */
+            --secondary-bg-color: #FFF8E1; /* 非常に薄い黄色 */
+            --text-color: #333333; /* ダークグレー */
+            --light-text-color: #666666; /* やや薄いグレー */
+            --accent-color: #FF9966; /* 強調用のオレンジ */
+        }
+
+        /* グローバルなフォント設定 */
+        body {
+            font-family: 'Inter', 'Murecho', sans-serif;
+            color: var(--text-color);
+            background-color: #ffffff;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Murecho', sans-serif; /* タイトルには和風フォント */
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        /* 各セクションのパディングを設定 */
+        section {
+            padding: 80px 0; /* パディングを少し増やす */
+            border-radius: 30px; /* 全体的に角を丸く */
+            margin-bottom: 30px; /* セクション間の余白 */
+            overflow: hidden; /* 角丸でコンテンツがはみ出さないように */
+        }
+        section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        /* ナビゲーションバーのスタイル */
+        .navbar {
+            background-color: var(--primary-color); /* ナビバーの背景色をパステルオレンジに */
+            border-bottom-left-radius: 20px; /* 左下に丸み */
+            border-bottom-right-radius: 20px; /* 右下に丸み */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* 影を柔らかく */
+        }
+        .navbar .nav-link, .navbar-brand {
+            color: #ffffff !important; /* ナビリンクとブランドの文字色を白に */
+            transition: color 0.3s ease; /* ホバー時のトランジション */
+            font-weight: 600;
+        }
+        .navbar .nav-link:hover {
+            color: #fff0d9 !important; /* ホバー時の文字色をより明るい黄色に */
+        }
+        .navbar-toggler-icon {
+            filter: brightness(0) invert(1); /* ハンバーガーアイコンを白く */
+        }
+
+        /* ヒーローセクションのスタイル */
+        #hero {
+            background: linear-gradient(135deg, var(--primary-color), #FFDAB9); /* パステルオレンジ系のグラデーション背景 */
+            color: #ffffff;
+            height: 90vh; /* ビューポートの高さに合わせる */
+            display: flex; /* flexboxを使って中央揃え */
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-bottom-left-radius: 80px; /* 左下に丸み */
+            border-bottom-right-radius: 80px; /* 右下に丸み */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 影を強調 */
+        }
+        #hero h1 {
+            font-size: 3.8rem; /* タイトルを大きく */
+            font-weight: 800; /* より太く */
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        #hero p {
+            font-size: 1.35rem;
+            margin-top: 25px;
+            font-weight: 500;
+        }
+        #hero .btn {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #hero .btn:hover {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        /* カードのスタイル */
+        .card {
+            border: none; /* ボーダーをなくす */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* 影を柔らかく */
+            border-radius: 20px; /* 角を丸く */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* ホバー時のトランジション */
+            overflow: hidden; /* 画像の角丸に対応 */
+            background-color: #ffffff;
+        }
+        .card:hover {
+            transform: translateY(-8px); /* ホバーで少し持ち上げる */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* ホバー時の影を強調 */
+        }
+        .card-img-top {
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .card-body {
+            padding: 25px;
+        }
+        .card-title {
+            color: var(--accent-color); /* カードタイトルを強調色に */
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+        .card-text {
+            color: var(--light-text-color);
+        }
+
+
+        /* フッターのスタイルは削除されたため不要 */
+
+
+        /* 各セクションの背景色と角丸 */
+        #about {
+            background-color: var(--secondary-bg-color); /* 薄い黄色 */
+        }
+        #services {
+            background-color: #ffffff; /* 白 */
+        }
+        /* ポートフォリオセクションが削除されたため、関連するスタイルは不要 */
+
+        /* ボタンのスタイル */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 30px; /* 角を丸く */
+            padding: 12px 35px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:hover {
+            background-color: #FFB366; /* ホバーで少し濃いオレンジに */
+            border-color: #FFB366;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .btn-lg {
+            font-size: 1.15rem;
+        }
+
+        /* アイコンの色 */
+        .text-accent-color {
+            color: var(--accent-color) !important;
+        }
+    </style>
+</head>
 <body>
-  TanaPiyopi
+
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#hero">TanaPiyopi</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#about">TanaPiyopiって？</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">できること</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section id="hero" class="d-flex align-items-center justify-content-center">
+        <div class="container text-center">
+            <h1 class="display-3 fw-bold">TanaPiyopiのiOSアプリ開発</h1>
+        </div>
+    </section>
+
+    <!-- TanaPiyopiについてセクション -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="mb-4 display-5 fw-bold">TanaPiyopiってどんな人？</h2>
+                    <p class="lead">
+                        私、TanaPiyopiは個人開発者です。<br>
+                        「こんなアプリがあったらいいな」を、アプリにしたいと思っています。
+                    </p>
+                    <p>
+                        使いやすい、可愛いデザインのアプリを目指し、勉強中です。<br>
+                        技術だけでなく、使う人の気持ちも大切にしています。
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-5 text-center g-4">
+                <div class="col-md-4">
+                    <div class="p-4 bg-white rounded-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                        <i class="fas fa-heart fa-3x text-accent-color mb-3"></i>
+                        <h3 class="h5 fw-bold text-accent-color">心を込めて</h3>
+                        <p>アプリは、心を込めて丁寧につくりたいです。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white rounded-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                        <i class="fas fa-magic fa-3x text-accent-color mb-3"></i>
+                        <h3 class="h5 fw-bold text-accent-color">可愛さUP</h3>
+                        <p>可愛いな、と思ってもらえるアプリを目指します。</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white rounded-3 shadow-sm h-100 d-flex flex-column justify-content-between">
+                        <i class="fas fa-lightbulb fa-3x text-accent-color mb-3"></i>
+                        <h3 class="h5 fw-bold text-accent-color">ひらめきを形に</h3>
+                        <p>皆さんの「こんなのあったらいいな」を、アプリにできたら嬉しいです。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- サービスセクション -->
+    <section id="services" class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="mb-5 display-5 fw-bold">TanaPiyopiができること</h2>
+                    <p class="lead">
+                        TanaPiyopiはiOSアプリ開発を勉強中です。あなたのアイデアを、iPhoneやiPadで動く可愛いアプリにするお手伝いができたら嬉しいです！
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center g-4 mt-4">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card h-100 text-center">
+                        <img src="https://placehold.co/600x400/FFCC99/ffffff?text=iOS+App+Dev" class="card-img-top" alt="iOSアプリ開発">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">iOSアプリ開発</h5>
+                            <p class="card-text">
+                                iPhoneやiPad向けのアプリ開発を学んでいます。デザインや簡単な機能のアプリなら、お力になれるかもしれません。<br>
+                                「こんな機能がほしい！」「こんなデザインにしたい！」<br>
+                                ユーザーさんが毎日使いたくなるような、可愛くて便利なアプリを作ることを大切にしています。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JSを読み込む -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
